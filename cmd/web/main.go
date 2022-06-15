@@ -7,12 +7,14 @@ import (
 	"net/http"
 	"os"
 
+	"kailashgautham.com/todotasks/pkg/models/mysql"
 	_ "github.com/go-sql-driver/mysql" //under score because we are not actually using the module, so Go might throw an error. But we need this package's init function.
 )
 
 type Application struct {
 	infoLog  *log.Logger
 	errorLog *log.Logger
+	todos *mysql.TodoModel
 }
 
 func main() {
@@ -33,6 +35,7 @@ func main() {
 	app := &Application{
 		infoLog:  infoLog,
 		errorLog: errorLog,
+		todos: &mysql.TodoModel{DB: db}
 	}
 
 	srv := &http.Server{
