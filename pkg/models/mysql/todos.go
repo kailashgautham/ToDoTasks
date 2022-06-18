@@ -35,10 +35,8 @@ func (m *TodoModel) Complete(id int) error {
 
 func (m *TodoModel) OpenDetails(id int) (*models.Todo, error) {
 
-	row := m.DB.QueryRow("SELECT id, task, duedate, urgency, notes, created FROM todolist where id = ?", id)
-
 	s := &models.Todo{}
-	err := row.Scan(&s.ID, &s.Task, &s.Duedate, &s.Urgency, &s.Notes, &s.Created)
+	err := m.DB.QueryRow("SELECT id, task, duedate, urgency, notes, created FROM todolist where id = ?", id).Scan(&s.ID, &s.Task, &s.Duedate, &s.Urgency, &s.Notes, &s.Created)
 
 	if err == sql.ErrNoRows {
 		return nil, models.ErrNoRecord
