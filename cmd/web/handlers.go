@@ -5,6 +5,9 @@ import (
 	"html/template"
 	"net/http"
 	"strconv"
+	"time"
+
+	"kailashgautham.com/todotasks/pkg/models"
 )
 
 func (app *Application) home(w http.ResponseWriter, r *http.Request) {
@@ -37,7 +40,15 @@ func (app *Application) showTodos(w http.ResponseWriter, r *http.Request) {
 		app.notFound(w)
 		return
 	}
-	fmt.Fprintf(w, "Showing todo %d.", id)
+	todo, err := app.todos.OpenDetails(id)
+	if err == models.ErrNoRecord {
+		app.notFound(w)
+		return
+	} else if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	fmt.Fprintf(w, "%v", *todo)
 }
 
 func (app *Application) showTodayTodos(w http.ResponseWriter, r *http.Request) {
@@ -50,5 +61,17 @@ func (app *Application) createTodo(w http.ResponseWriter, r *http.Request) {
 		app.clientError(w, http.StatusMethodNotAllowed)
 		return
 	}
-	w.Write([]byte("Creating todo..."))
+	loc, err := time.LoadLocation("Local")
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	id, err := app.todos.Insert(3, time.Date(2022, 7, 31, 0, 0, 0, 0, loc), "Move into Cinnamon College!", "Remember to pack things and move in before 5 p.m.")
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	http.Redirect(w, r, fmt.Sprintf("/todo?id=%d", id),
+		http.StatusSeeOther)
 }
