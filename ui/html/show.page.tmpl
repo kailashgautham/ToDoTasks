@@ -1,0 +1,18 @@
+{{template "base" .}}
+
+{{define "title"}}Todo #{{.Todo.ID}}{{end}} 
+{{define "body"}}
+{{with .Todo}}
+<div class='snippet'>
+<div class='metadata'>
+<strong>{{.Task}}</strong> 
+<span>Urgency Level: {{.Urgency}}</span>
+</div>
+<pre><code>{{.Notes}}</code></pre> 
+<div class='metadata'>
+<time>Created: {{.Created}}</time> 
+<time>Due On: {{.Duedate}}</time>
+</div> 
+</div> 
+{{end}}
+{{end}}

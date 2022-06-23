@@ -60,10 +60,13 @@ func (app *Application) showTodo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	td := &templateData{Todo: todo}
+
 	files := []string{
 		"./ui/html/home.page.tmpl",
 		"./ui/html/base.layout.tmpl",
 		"./ui/html/footer.partial.tmpl",
+		"./ui/html/show.page.tmpl",
 	}
 
 	ts, err := template.ParseFiles(files...)
@@ -72,7 +75,7 @@ func (app *Application) showTodo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = ts.Execute(w, todo)
+	err = ts.Execute(w, td)
 	if err != nil {
 		app.serverError(w, err)
 		return
