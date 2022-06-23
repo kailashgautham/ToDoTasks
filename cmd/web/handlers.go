@@ -15,7 +15,17 @@ func (app *Application) home(w http.ResponseWriter, r *http.Request) {
 		http.NotFound(w, r)
 		return
 	}
-	files := []string{
+
+	t, err := app.todos.ShowPending()
+
+	if err != nil {
+		app.serverError(w, err)
+	}
+
+	for _, todo := range t {
+		fmt.Fprintf(w, "%v\n", *todo)
+	}
+	/*files := []string{
 		"./ui/html/home.page.tmpl",
 		"./ui/html/base.layout.tmpl",
 		"./ui/html/footer.partial.tmpl",
@@ -31,10 +41,11 @@ func (app *Application) home(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		app.serverError(w, err)
 		return
-	}
+	}*/
+
 }
 
-func (app *Application) showTodos(w http.ResponseWriter, r *http.Request) {
+func (app *Application) showTodo(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.URL.Query().Get("id"))
 	if err != nil || id < 1 {
 		app.notFound(w)
@@ -48,7 +59,24 @@ func (app *Application) showTodos(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
-	fmt.Fprintf(w, "%v", *todo)
+
+	files := []string{
+		"./ui/html/home.page.tmpl",
+		"./ui/html/base.layout.tmpl",
+		"./ui/html/footer.partial.tmpl",
+	}
+
+	ts, err := template.ParseFiles(files...)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	err = ts.Execute(w, todo)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
 }
 
 func (app *Application) showTodayTodos(w http.ResponseWriter, r *http.Request) {

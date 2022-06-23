@@ -50,7 +50,28 @@ func (m *TodoModel) OpenDetails(id int) (*models.Todo, error) {
 
 func (m *TodoModel) ShowPending() ([]*models.Todo, error) {
 
-	return nil, nil
+	rows, err := m.DB.Query("SELECT id, task, duedate, urgency, notes, created FROM todolist")
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	todos := []*models.Todo{}
+
+	for rows.Next() {
+		s := &models.Todo{}
+		err = rows.Scan(&s.ID, &s.Task, &s.Duedate, &s.Urgency, &s.Notes, &s.Created)
+		if err != nil {
+			return nil, err
+		}
+		todos = append(todos, s)
+	}
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+	return todos, nil
 }
 
 func (m *TodoModel) ShowCompleted() {
