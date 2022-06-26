@@ -22,10 +22,9 @@ func (app *Application) home(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 	}
 
-	for _, todo := range t {
-		fmt.Fprintf(w, "%v\n", *todo)
-	}
-	/*files := []string{
+	td := &templateData{Todos: t}
+
+	files := []string{
 		"./ui/html/home.page.tmpl",
 		"./ui/html/base.layout.tmpl",
 		"./ui/html/footer.partial.tmpl",
@@ -37,11 +36,11 @@ func (app *Application) home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = ts.Execute(w, nil)
+	err = ts.Execute(w, td)
 	if err != nil {
 		app.serverError(w, err)
 		return
-	}*/
+	}
 
 }
 
@@ -61,25 +60,7 @@ func (app *Application) showTodo(w http.ResponseWriter, r *http.Request) {
 	}
 
 	td := &templateData{Todo: todo}
-
-	files := []string{
-		"./ui/html/home.page.tmpl",
-		"./ui/html/base.layout.tmpl",
-		"./ui/html/footer.partial.tmpl",
-		"./ui/html/show.page.tmpl",
-	}
-
-	ts, err := template.ParseFiles(files...)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
-
-	err = ts.Execute(w, td)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
+	app.render(w, r, "home.page.tmpl", td)
 }
 
 func (app *Application) showTodayTodos(w http.ResponseWriter, r *http.Request) {

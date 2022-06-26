@@ -4,7 +4,24 @@
 
 {{define "body"}}
 <h2>All To-Do Tasks</h2>
-<p>There's nothing to see here yet!</p> 
+{{if .Todos}}
+<table>
+    <tr>
+        <th>Task</th>
+        <th>Urgency</th>
+        <th>Due Date</th>
+    </tr>
+    {{range .Todos}}
+    <tr>
+        <td><a href='/todo?id={{.ID}}'>{{.Task}}</a></td>
+        <td>{{.Urgency}}</td>
+        <td>{{.Duedate}}</td>
+    </tr>
+    {{end}}
+</table>
+{{else}}
+    <p>There's nothing to see here yet!</p> 
+{{end}}
 {{end}}
 
 
