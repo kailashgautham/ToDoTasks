@@ -8,8 +8,9 @@ import (
 )
 
 type templateData struct {
-	Todo  *models.Todo
-	Todos []*models.Todo
+	CurrentYear int
+	Todo        *models.Todo
+	Todos       []*models.Todo
 }
 
 func newTemplateCache(dir string) (map[string]*template.Template, error) {
