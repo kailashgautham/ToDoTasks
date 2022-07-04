@@ -15,7 +15,7 @@
     <tr>
         <td><a href='/todo?id={{.ID}}'>{{.Task}}</a></td>
         <td>{{.Urgency}}</td>
-        <td>{{.Duedate}}</td>
+        <td>{{humanDate .Duedate}}</td>
     </tr>
     {{end}}
 </table>
