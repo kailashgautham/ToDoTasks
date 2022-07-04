@@ -43,7 +43,7 @@ func (app *Application) showTodo(w http.ResponseWriter, r *http.Request) {
 	}
 
 	td := &templateData{Todo: todo}
-	app.render(w, r, "home.page.tmpl", td)
+	app.render(w, r, "show.page.tmpl", td)
 }
 
 func (app *Application) showTodayTodos(w http.ResponseWriter, r *http.Request) {
